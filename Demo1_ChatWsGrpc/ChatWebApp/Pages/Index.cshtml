@@ -1,0 +1,33 @@
+@page
+@model ChatWebApp.Pages.IndexModel
+@{
+    ViewData["Title"] = "Chat Demo";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Chat · WebSocket + gRPC</title>
+  <link rel="stylesheet" href="/css/chat.css"/>
+</head>
+<body>
+  <div class="landing">
+    <div class="brand">
+      <span class="logo-ws">WS</span>
+      <span class="logo-grpc">gRPC</span>
+    </div>
+    <h1>Chat en Tiempo Real</h1>
+
+    <form method="get" action="/Chat">
+      <div class="field">
+        <label for="sender">Tu nombre</label>
+        <input id="sender" name="sender" type="text" placeholder="Ej. María" required autocomplete="off"/>
+      </div>
+      <input type="hidden" name="room" value="general" />
+      <button type="submit">Entrar al chat →</button>
+    </form>
+  </div>
+</body>
+</html>

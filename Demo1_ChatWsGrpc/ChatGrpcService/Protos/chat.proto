@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "ChatGrpcService";
+
+package chat;
+
+service ChatService {
+  rpc SendMessage (ChatMessage) returns (ChatResponse);
+  rpc GetHistory  (HistoryRequest) returns (stream ChatMessage);
+}
+
+message ChatMessage {
+  string sender  = 1;
+  string content = 2;
+  string room    = 3;
+  string sent_at = 4;
+}
+
+message ChatResponse {
+  bool   success = 1;
+  string message_id = 2;
+}
+
+message HistoryRequest {
+  string room  = 1;
+  int32  limit = 2;
+}

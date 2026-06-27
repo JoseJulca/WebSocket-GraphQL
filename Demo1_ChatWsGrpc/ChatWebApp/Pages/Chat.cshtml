@@ -1,0 +1,164 @@
+@page
+@model ChatWebApp.Pages.ChatModel
+@{
+    ViewData["Title"] = "Chat";
+    var sender = Model.Sender;
+    var room   = Model.Room;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Chat · @room</title>
+  <link rel="stylesheet" href="/css/chat.css"/>
+</head>
+<body>
+  <div class="chat-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-small">
+        <span class="logo-ws">WS</span>
+        <span class="logo-grpc">gRPC</span>
+      </div>
+      <div class="user-info">
+        <div class="avatar">@sender[0]</div>
+        <span>@sender</span>
+      </div>
+        <nav class="rooms">
+            <p class="rooms-label">Sala</p>
+            <a href="/Chat?sender=@sender&room=general" class="active">💬 General</a>
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="chat-main">
+      <header class="chat-header">
+        <div>
+          @* <h2>#@room</h2> *@
+          <span id="status" class="dot connecting">Conectando…</span>
+        </div>
+        <a href="/" class="btn-leave">← Salir</a>
+      </header>
+
+      <div id="messages" class="messages"></div>
+
+      <footer class="chat-footer">
+        <input id="input" type="text" placeholder="Escribe un mensaje…" autocomplete="off"/>
+        <button id="sendBtn">Enviar</button>
+      </footer>
+    </main>
+
+  </div>
+
+    <script>
+            const sender = decodeURIComponent("@Uri.EscapeDataString(sender)");
+            const room   = "@room";
+            const wsUrl  = `ws://${location.host}/ws?room=${room}&sender=${encodeURIComponent(sender)}`;
+
+            const messagesEl = document.getElementById("messages");
+            const inputEl    = document.getElementById("input");
+            const statusEl   = document.getElementById("status");
+            const sendBtn    = document.getElementById("sendBtn");
+
+            // Paleta de colores por persona
+            const COLORS = [
+              "#f4a261", "#52b788", "#e76f51", "#4cc9f0",
+              "#c77dff", "#ffd166", "#06d6a0", "#ef476f"
+            ];
+            const colorMap = {};
+            function colorFor(name) {
+              if (!colorMap[name]) {
+                const idx = Object.keys(colorMap).length % COLORS.length;
+                colorMap[name] = COLORS[idx];
+              }
+              return colorMap[name];
+            }
+
+            let ws;
+
+            function connect() {
+              ws = new WebSocket(wsUrl);
+
+              ws.onopen = () => {
+                statusEl.textContent = "Conectado";
+                statusEl.className   = "dot connected";
+                inputEl.disabled     = false;
+                sendBtn.disabled     = false;
+              };
+
+              ws.onclose = () => {
+                statusEl.textContent = "Desconectado — reconectando…";
+                statusEl.className   = "dot disconnected";
+                inputEl.disabled     = true;
+                sendBtn.disabled     = true;
+                setTimeout(connect, 3000);
+              };
+
+              ws.onerror = () => ws.close();
+
+              ws.onmessage = (e) => {
+                const msg = JSON.parse(e.data);
+                appendMessage(msg);
+              };
+            }
+
+            function appendMessage(msg) {
+              const wrap = document.createElement("div");
+
+              if (msg.type === "system") {
+                wrap.className = "msg-system";
+                wrap.textContent = msg.content;
+                messagesEl.appendChild(wrap);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+                return;
+              }
+
+              const isMine = msg.sender === sender;
+              wrap.className = `msg-bubble ${isMine ? "mine" : "other"}`;
+
+              const color = colorFor(msg.sender);
+              if (isMine) {
+                wrap.style.background = color;
+                wrap.style.color = "#1c1612";
+              } else {
+                wrap.style.borderLeft = `3px solid ${color}`;
+              }
+
+              if (!isMine) {
+                const name = document.createElement("span");
+                name.className = "msg-name";
+                name.style.color = color;
+                name.textContent = msg.sender;
+                wrap.appendChild(name);
+              }
+
+              const text = document.createElement("p");
+              text.textContent = msg.content;
+              wrap.appendChild(text);
+
+              const time = document.createElement("span");
+              time.className = "msg-time";
+              time.textContent = msg.sentAt || "";
+              wrap.appendChild(time);
+
+              messagesEl.appendChild(wrap);
+              messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+
+            function send() {
+              const content = inputEl.value.trim();
+              if (!content || ws.readyState !== WebSocket.OPEN) return;
+              ws.send(JSON.stringify({ type: "message", sender, content, room }));
+              inputEl.value = "";
+            }
+
+            sendBtn.addEventListener("click", send);
+            inputEl.addEventListener("keydown", e => { if (e.key === "Enter") send(); });
+
+            connect();
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<svg width="680" height="520" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Arquitectura Demo 1 — Chat WebSocket + gRPC</title>
+<style>
+  * { font-family: 'Segoe UI', Arial, sans-serif; }
+  .label { fill: #1c1612; font-size: 13px; font-weight: 600; }
+  .sub   { fill: #5a4a3a; font-size: 11px; }
+  .arrow { stroke-width: 1.5; fill: none; }
+  .arr-label { fill: #5a4a3a; font-size: 11px; }
+  .sep   { stroke: #ccbcac; stroke-width: 0.5; stroke-dasharray: 4 4; }
+  .legend { fill: #5a4a3a; font-size: 11px; }
+</style>
+<rect width="680" height="520" fill="white"/>
+
+<!-- Browser -->
+<rect x="40" y="40" width="160" height="80" rx="8" fill="#e1f5ee" stroke="#1D9E75" stroke-width="0.8"/>
+<text class="label" x="120" y="74" text-anchor="middle">Browser</text>
+<text class="sub"   x="120" y="92" text-anchor="middle">Razor Pages + JS</text>
+
+<!-- ChatWebApp -->
+<rect x="260" y="40" width="180" height="80" rx="8" fill="#faeeda" stroke="#BA7517" stroke-width="0.8"/>
+<text class="label" x="350" y="68" text-anchor="middle">ChatWebApp</text>
+<text class="sub"   x="350" y="85" text-anchor="middle">ASP.NET Core</text>
+<text class="sub"   x="350" y="102" text-anchor="middle">puerto 5000</text>
+
+<!-- ChatGrpcService -->
+<rect x="500" y="40" width="150" height="80" rx="8" fill="#eeedfe" stroke="#534AB7" stroke-width="0.8"/>
+<text class="label" x="575" y="68" text-anchor="middle">ChatGrpcService</text>
+<text class="sub"   x="575" y="85" text-anchor="middle">gRPC HTTP/2</text>
+<text class="sub"   x="575" y="102" text-anchor="middle">puerto 5001</text>
+
+<defs>
+  <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#1D9E75" stroke-width="1.5"/>
+  </marker>
+  <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#BA7517" stroke-width="1.5"/>
+  </marker>
+  <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5"/>
+  </marker>
+  <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5"/>
+  </marker>
+</defs>
+
+<line x1="200" y1="68" x2="258" y2="68" class="arrow" stroke="#1D9E75" marker-end="url(#a1)"/>
+<text class="arr-label" x="229" y="60" text-anchor="middle">WebSocket</text>
+<text class="arr-label" x="229" y="82" text-anchor="middle">ws://</text>
+
+<line x1="440" y1="68" x2="498" y2="68" class="arrow" stroke="#BA7517" marker-end="url(#a2)"/>
+<text class="arr-label" x="469" y="60" text-anchor="middle">gRPC call</text>
+<text class="arr-label" x="469" y="82" text-anchor="middle">HTTP/2</text>
+
+<!-- In-Memory -->
+<rect x="500" y="170" width="150" height="54" rx="8" fill="#f1efe8" stroke="#888780" stroke-width="0.8"/>
+<text class="label" x="575" y="193" text-anchor="middle">In-Memory</text>
+<text class="sub"   x="575" y="211" text-anchor="middle">Historial mensajes</text>
+<line x1="575" y1="120" x2="575" y2="168" class="arrow" stroke="#888780" marker-end="url(#a3)"/>
+
+<!-- Separador -->
+<line x1="40" y1="258" x2="640" y2="258" class="sep"/>
+<text class="sub" x="340" y="250" text-anchor="middle">Flujo detallado por operación</text>
+
+<!-- Flujo 1 -->
+<text class="label" x="60" y="285">1. Enviar mensaje</text>
+<rect x="40"  y="298" width="100" height="36" rx="6" fill="#e1f5ee" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="sub" x="90" y="311" text-anchor="middle">Usuario</text>
+<text class="sub" x="90" y="325" text-anchor="middle">escribe</text>
+<line x1="140" y1="316" x2="168" y2="316" class="arrow" stroke="#1D9E75" marker-end="url(#a1)"/>
+<rect x="170" y="298" width="115" height="36" rx="6" fill="#faeeda" stroke="#BA7517" stroke-width="0.5"/>
+<text class="sub" x="227" y="311" text-anchor="middle">WS Handler</text>
+<text class="sub" x="227" y="325" text-anchor="middle">recibe JSON</text>
+<line x1="285" y1="316" x2="313" y2="316" class="arrow" stroke="#BA7517" marker-end="url(#a2)"/>
+<rect x="315" y="298" width="115" height="36" rx="6" fill="#eeedfe" stroke="#534AB7" stroke-width="0.5"/>
+<text class="sub" x="372" y="311" text-anchor="middle">SendMessage</text>
+<text class="sub" x="372" y="325" text-anchor="middle">gRPC guarda</text>
+<line x1="430" y1="316" x2="458" y2="316" class="arrow" stroke="#534AB7" marker-end="url(#a4)"/>
+<rect x="460" y="298" width="120" height="36" rx="6" fill="#e1f5ee" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="sub" x="520" y="311" text-anchor="middle">Broadcast WS</text>
+<text class="sub" x="520" y="325" text-anchor="middle">a todos en sala</text>
+
+<!-- Flujo 2 -->
+<text class="label" x="60" y="368">2. Cargar historial al conectarse</text>
+<rect x="40"  y="382" width="100" height="36" rx="6" fill="#e1f5ee" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="sub" x="90" y="395" text-anchor="middle">Nuevo usuario</text>
+<text class="sub" x="90" y="409" text-anchor="middle">se conecta</text>
+<line x1="140" y1="400" x2="168" y2="400" class="arrow" stroke="#1D9E75" marker-end="url(#a1)"/>
+<rect x="170" y="382" width="115" height="36" rx="6" fill="#faeeda" stroke="#BA7517" stroke-width="0.5"/>
+<text class="sub" x="227" y="395" text-anchor="middle">SendHistoryAsync</text>
+<text class="sub" x="227" y="409" text-anchor="middle">llama gRPC</text>
+<line x1="285" y1="400" x2="313" y2="400" class="arrow" stroke="#BA7517" marker-end="url(#a2)"/>
+<rect x="315" y="382" width="115" height="36" rx="6" fill="#eeedfe" stroke="#534AB7" stroke-width="0.5"/>
+<text class="sub" x="372" y="395" text-anchor="middle">GetHistory</text>
+<text class="sub" x="372" y="409" text-anchor="middle">server streaming</text>
+<line x1="430" y1="400" x2="458" y2="400" class="arrow" stroke="#534AB7" marker-end="url(#a4)"/>
+<rect x="460" y="382" width="120" height="36" rx="6" fill="#e1f5ee" stroke="#1D9E75" stroke-width="0.5"/>
+<text class="sub" x="520" y="395" text-anchor="middle">Últimos 20 msgs</text>
+<text class="sub" x="520" y="409" text-anchor="middle">al browser</text>
+
+<!-- Leyenda -->
+<rect x="40"  y="455" width="12" height="12" rx="2" fill="#e1f5ee" stroke="#1D9E75" stroke-width="0.8"/>
+<text class="legend" x="58" y="466">WebSocket (browser ↔ servidor)</text>
+<rect x="260" y="455" width="12" height="12" rx="2" fill="#eeedfe" stroke="#534AB7" stroke-width="0.8"/>
+<text class="legend" x="278" y="466">gRPC HTTP/2 (servidor ↔ backend)</text>
+<rect x="490" y="455" width="12" height="12" rx="2" fill="#faeeda" stroke="#BA7517" stroke-width="0.8"/>
+<text class="legend" x="508" y="466">Bridge / lógica ASP.NET</text>
+</svg>
